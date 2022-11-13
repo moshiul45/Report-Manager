@@ -1,14 +1,13 @@
 const User = require("../../models/user/user");
+const { response } = require("../../utils/response");
+//admin can add employee/user for the organization through this controller
 exports.add_user = async (req, res) => {
   try {
     const { body: user_body } = req;
     const newUser = new User(user_body);
     const user_res = await newUser.save();
     if (user_res) {
-      return res.status(200).json({
-        status: true,
-        message: "Test is successful. User data inserted succesfully",
-      });
+      response(res, true, "New User Added Successfully!");
     }
   } catch (error) {
     return res.status(404).json({
