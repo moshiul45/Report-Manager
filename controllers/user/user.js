@@ -49,3 +49,19 @@ exports.update_user = async (req, res) => {
     });
   }
 };
+
+//admin can update employee/user for the organization through this controller
+exports.change_status = async (req, res) => {
+  try {
+    const { _id } = req?.body;
+    const user_res = await User.findById({ _id });
+    if (user_res) {
+      response(res, 200, true, "New User Added Successfully!");
+    }
+  } catch (error) {
+    return res.status(404).json({
+      status: false,
+      message: error?.message || "Server error!!!",
+    });
+  }
+};
