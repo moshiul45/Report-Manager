@@ -15,6 +15,10 @@ const UserSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
+    salary: {
+      type: Number,
+      required: true,
+    },
     phone: {
       type: String,
       max: 15,
