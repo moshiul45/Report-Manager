@@ -1,15 +1,15 @@
 const Joi = require("joi");
 
 exports.schema = Joi.object({
-  name: Joi.string().alphanum().min(3).max(30).required(),
+  name: Joi.string().min(3).max(30).required(),
 
   password: Joi.string().pattern(new RegExp("^[a-zA-Z0-9]{3,30}$")),
 
   phone: Joi.number(),
-  salary: Joi.number().min(4).max(6),
+  salary: Joi.number().min(1000).max(500000),
   email: Joi.string().email({
     minDomainSegments: 2,
-    tlds: { allow: ["com", "net", "tech", "edu.bd"] },
+    tlds: { allow: ["com", "net", "tech", "edu", "bd"] },
   }),
 });
 

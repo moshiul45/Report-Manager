@@ -3,6 +3,6 @@ const { add_user } = require("../controllers/user/user");
 const router = express.Router();
 
 /* GET users listing. */
-router.get("/", add_user);
+router.post("/", add_user);
 
 module.exports = router;
