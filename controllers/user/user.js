@@ -18,9 +18,17 @@ exports.add_user = async (req, res) => {
     }
     if (value) {
       const newUser = new User(user_body);
-      const user_res = await newUser.save();
+      var user_res = await newUser.save();
       if (user_res) {
-        return response(res, 200, true, "New User Added Successfully!");
+        user_res.password = null;
+        console.log({ user_res });
+        return response(
+          res,
+          200,
+          true,
+          "New User Added Successfully!",
+          user_res
+        );
       }
     }
   } catch (error) {
