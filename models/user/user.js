@@ -15,6 +15,10 @@ const UserSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
+    role_id: {
+      type: Number,
+      default: 2, // Admin=1 & User=2
+    },
     salary: {
       type: Number,
       required: true,

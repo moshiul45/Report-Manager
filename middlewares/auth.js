@@ -1,48 +1,35 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
+const { response } = require("../utils/response");
 require("../../../configs/env.config");
 
 // Authentication Middleware
-const authenticateJWT = async (req, res) => {
+const authenticateJWT = async (req, res, next) => {
   const authHeader = req?.headers?.authorization;
 
   if (authHeader) {
     const token = authHeader.split(" ")[1];
     const user_res = await User.findOne({ remember_token: token }).select(
-      "name email"
+      "name email role_id remember_token"
     );
-    // console.log("====",{user_res});
+
     if (!user_res) {
-      res.status(401).json({
-        status: false,
-        message: "User is unauthorized!!!",
-      });
+      return response(res, 401, false, "User is unauthorized!");
     } else {
       const { remember_token } = user_res;
 
       jwt.verify(token, process.env.accessTokenSecret, (err, user) => {
         if (err) {
-          return res.status(401).json({
-            status: false,
-            message: "User is unauthorized!!!",
-          });
+          return response(res, 401, false, "User is unauthorized!");
         }
         req.user = user;
-        req.user_details = user_res;
-        req.auth = true;
-        req.token = token;
-        req.remember_token = remember_token;
-        req.user_res = user_res;
         console.log({ user: user });
-        // console.log("====Token====", token);
       });
+      next();
     }
   } else {
-    res.status(401).json({
-      status: false,
-      message: "User is unauthorized!!!",
-    });
+    return response(res, 401, false, "User is unauthorized!");
   }
 };
 
-exports.authenticateJWT = authenticateJWT;
+module.exports = authenticateJWT;
