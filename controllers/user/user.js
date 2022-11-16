@@ -1,6 +1,45 @@
 const User = require("../../models/user/user");
+const bcrypt = require("bcrypt");
 const { schema } = require("../../validator/validator");
 const { response } = require("../../utils/response");
+
+/**************************************************************
+                User LogIn & Log out
+**************************************************************/
+exports.login = async (req, res) => {
+  try {
+    const { email, pass } = req?.body;
+    if (!email || !pass) {
+      return response(res, 404, false, "Fill up Email & Pass Properly.");
+    }
+    const user = await User.findOne({ email }).select(
+      "-_id name email password phone avatar remember_token status"
+    );
+    if (!user) {
+      return response(res, 404, false, "User not Found");
+    }
+    const validPassword = await bcrypt.compare(pass, user.password);
+    if (!validPassword) {
+      return response(res, 404, false, "Incorrect Password");
+    }
+    if ((user.status = INACTIVE)) {
+      return response(res, 403, false, "You are not allowed to login");
+    }
+
+    const tokenObject = {
+      email: user?.email,
+      role_id: user?.role_id,
+      name: user?.first_name,
+    };
+    const accessToken = jwt.sign(tokenObject, accessTokenSecret);
+
+    await User.updateOne({ email }, { remember_token: accessToken });
+
+    return response(res, 200, true, "Logged In", { user, accessToken });
+  } catch (error) {
+    return response(res, 500, false, error.message);
+  }
+};
 
 //admin can add employee/user for the organization through this controller
 exports.add_user = async (req, res) => {

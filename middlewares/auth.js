@@ -12,12 +12,9 @@ const authenticateJWT = async (req, res, next) => {
     const user_res = await User.findOne({ remember_token: token }).select(
       "name email role_id remember_token"
     );
-
     if (!user_res) {
       return response(res, 401, false, "User is unauthorized!");
     } else {
-      const { remember_token } = user_res;
-
       jwt.verify(token, process.env.accessTokenSecret, (err, user) => {
         if (err) {
           return response(res, 401, false, "User is unauthorized!");
