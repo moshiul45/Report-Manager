@@ -3,9 +3,9 @@ const bcrypt = require("bcrypt");
 const { schema } = require("../../validator/validator");
 const { response } = require("../../utils/response");
 
-/**************************************************************
+/*****************************************************************
                 User LogIn & Log out
-**************************************************************/
+*****************************************************************/
 exports.login = async (req, res) => {
   try {
     const { email, pass } = req?.body;
@@ -41,7 +41,9 @@ exports.login = async (req, res) => {
   }
 };
 
-//admin can add employee/user for the organization through this controller
+/*****************************************************************
+          ADD User, Update User & User Status Change
+*****************************************************************/
 exports.add_user = async (req, res) => {
   try {
     const { body: user_body } = req;
@@ -80,7 +82,6 @@ exports.add_user = async (req, res) => {
   }
 };
 
-//admin can update employee/user for the organization through this controller
 exports.update_user = async (req, res) => {
   try {
     const { body: user_body } = req;
@@ -97,7 +98,6 @@ exports.update_user = async (req, res) => {
   }
 };
 
-//admin can update employee/user for the organization through this controller
 exports.change_status = async (req, res) => {
   try {
     const { _id } = req?.body;
