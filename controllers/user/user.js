@@ -58,6 +58,9 @@ exports.add_user = async (req, res) => {
       return response(res, 200, false, "Validation Error", error.details);
     }
     if (value) {
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(password, salt);
+      user_body.password = hashedPassword;
       const newUser = new User(user_body);
       var user_res = await newUser.save();
       if (user_res) {
