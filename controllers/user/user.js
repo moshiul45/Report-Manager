@@ -80,7 +80,7 @@ exports.add_user = async (req, res) => {
       res,
       400,
       false,
-      "Unsuccessful.User not Added! Someting went wrong"
+      "Unsuccessful. User not Added! Someting went wrong"
     );
   }
 };
@@ -88,16 +88,12 @@ exports.add_user = async (req, res) => {
 exports.update_user = async (req, res) => {
   try {
     const { body: user_body } = req;
-    const newUser = new User(user_body);
-    const user_res = await newUser.save();
-    if (user_res) {
-      response(res, 200, true, "New User Added Successfully!");
+    const update_res = User.findByIdAndUpdate({ _id }, { user_body });
+    if (update_res) {
+      response(res, 200, true, "User Updated Successfully");
     }
   } catch (error) {
-    return res.status(404).json({
-      status: false,
-      message: error?.message || "Server error!!!",
-    });
+    return response(res, 400, false, error.message);
   }
 };
 
