@@ -2,6 +2,7 @@ const User = require("../../models/user/user");
 const bcrypt = require("bcrypt");
 const { schema } = require("../../validator/validator");
 const { response } = require("../../utils/response");
+const { ACTIVE, INACTIVE } = require("../../utils/user_status");
 
 /*****************************************************************
                 User LogIn & Log out
@@ -100,14 +101,15 @@ exports.update_user = async (req, res) => {
 exports.change_status = async (req, res) => {
   try {
     const { _id } = req?.body;
-    const user_res = await User.findById({ _id });
-    if (user_res) {
-      response(res, 200, true, "New User Added Successfully!");
+    const user_res = await User.findByIdAndUpdate({ _id });
+    if (user_res.status == ACTIVE) {
+      await User.findByIdAndUpdate({ _id }, { status: INACTIVE });
+      return response(res, 200, true, "User has been Deactivated");
+    } else {
+      await User.findByIdAndUpdate({ _id }, { status: ACTIVE });
+      return response(res, 200, true, "User has been Activated");
     }
   } catch (error) {
-    return res.status(404).json({
-      status: false,
-      message: error?.message || "Server error!!!",
-    });
+    return response(res, 400, false, error.message);
   }
 };
