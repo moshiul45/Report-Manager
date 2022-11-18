@@ -90,7 +90,7 @@ exports.update_user = async (req, res) => {
     const { body: user_body } = req;
     const update_res = User.findByIdAndUpdate({ _id }, { user_body });
     if (update_res) {
-      response(res, 200, true, "User Updated Successfully");
+      return response(res, 200, true, "User Updated Successfully");
     }
   } catch (error) {
     return response(res, 400, false, error.message);
